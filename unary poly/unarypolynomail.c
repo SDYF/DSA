@@ -41,6 +41,10 @@ int main()
 
     for (i = 0; i < 10; i++)
         a[i] = 0;
+    a[0] = 1;
+
+    L[0] = (struct LNode *)malloc(sizeof(struct LNode));
+    L[0]->next = NULL;
 
     while (1)
     {
@@ -98,18 +102,18 @@ int main()
 
         case '5': //多项式求和
             printf("请输入要求和的两个多项式:\n\n");
-            sleep(1);
+            // Sleep(1);
             printf("请输入第一个多项式\n");
             n1 = Poly_in(a);
             printf("请输入第二个多项式\n");
             n2 = Poly_in(a);
-            PolyDelete(*(L + 0));
-            *(L + 0) = PolyAdd(L, *(L + n1), *(L + n2));
-            PrintPoly(*(L + 0));
+            PolyDelete(L[0]);
+            L[0] = PolyAdd(L, *(L + n1), *(L + n2));
+            PrintPoly(L[0]);
             break;
         case '6':
             printf("请输入要求差的两个多项式：\n\n");
-            sleep(1);
+            //Sleep(1);
             printf("请输入被减式式\n");
             n1 = Poly_in(a);
             printf("请输入减式\n");
@@ -118,7 +122,7 @@ int main()
             break;
         case '7':
             printf("请输入要求积的两个多项式：\n\n");
-            sleep(1);
+            // sleep(1);
             printf("请输入第一个多项式\n");
             n1 = Poly_in(a);
             printf("请输入第二个多项式\n");
@@ -145,14 +149,14 @@ int main()
             break;
         case '0':
             printf("感谢使用本程序！\n");
-            return;
+            return 0;
             break;
         default:
             printf("错误输入！\n\n");
             break;
         }
 
-        printf("\ncount=%d\n\n", count);
+        //    printf("\ncount=%d\n\n", count);
     }
 }
 
@@ -266,7 +270,7 @@ void CreatPoly(struct LNode **L, int *count, int *a)
     }
 
     printf("成功创建%d号多项式！\n\n", i);
-    //    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
     return;
 }
 
@@ -294,7 +298,7 @@ int Poly_in(int *a)
         }
         if (a[(int)lab - 48] == 0)
         {
-            printf("该多项式未被创建，请重新输入");
+            printf("该多项式未被创建，请重新输入\n");
             continue;
         }
         break;
@@ -437,16 +441,18 @@ void PolyCopy(struct LNode **L, int n1, int n2, int *a)
         q = q->next;
         p = p->next;
     }
-
+    q->next = NULL;
     return;
 }
 
 struct LNode *PolyAdd(struct LNode **L, struct LNode *L1, struct LNode *L2)
 {
-    struct LNode *p, *q, *s;
+    struct LNode *p, *q, *s, *t;
 
-    PolyDelete(*(L + 0));
-
+    //    PolyDelete(*(L + 0));
+    s = (struct LNode *)malloc(sizeof(struct LNode));
+    t = s;
+    s->next = NULL;
     p = L1;
     q = L2;
 
@@ -455,14 +461,16 @@ struct LNode *PolyAdd(struct LNode **L, struct LNode *L1, struct LNode *L2)
         if ((p->next->data.exp) > (q->next->data.exp))
         {
             s->next = (struct LNode *)malloc(sizeof(struct LNode));
-            s->next->data = p->next->data;
+            s->next->data.exp = p->next->data.exp;
+            s->next->data.coe = p->next->data.coe;
             s = s->next;
             p = p->next;
         }
         else if ((p->next->data.exp) < (q->next->data.exp))
         {
             s->next = (struct LNode *)malloc(sizeof(struct LNode));
-            s->next->data = q->next->data;
+            s->next->data.exp = q->next->data.exp;
+            s->next->data.coe = q->next->data.coe;
             s = s->next;
             q = q->next;
         }
@@ -485,7 +493,7 @@ struct LNode *PolyAdd(struct LNode **L, struct LNode *L1, struct LNode *L2)
     else
         s->next = p->next;
 
-    return (s);
+    return (t);
 }
 
 void PolySub(struct LNode **L, struct LNode *L1, struct LNode *L2)
