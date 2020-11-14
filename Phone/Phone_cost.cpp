@@ -78,6 +78,7 @@ int main() {
       p = p->next;
     }
   }
+
   endTime = clock();
   cout << "The run time is " << (double)(endTime - startTime) / CLOCKS_PER_SEC
        << 's' << endl;
@@ -105,6 +106,7 @@ long Phone_cost(string call_type, string time) {
   int call = stoi(call_type);
   int cost_per_s, time_int;
   long cost = 0;
+
   switch (call) {
     case 0:
       cost_per_s = 40;
