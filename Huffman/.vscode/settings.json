@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "xlocale": "cpp",
+        "fstream": "cpp",
+        "initializer_list": "cpp",
+        "memory": "cpp",
+        "string": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "utility": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
+    }
+}
