@@ -1,5 +1,7 @@
 #include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <queue>
 #include <string>
 
 using namespace std;
@@ -40,15 +42,15 @@ struct tNode {
   bool operator<=(const tNode &P) { return this->weight <= P.weight; }
 };
 
-#pragma region queue
+#pragma region queue_tree
 //储存结点的队列
-class queue {
+class queue_tree {
  public:
-  queue();
+  queue_tree();
   void Init(ch *, int);
   void Insert(tNode *);
   int getsize();
-  void queue_print();
+  void queue_tree_print();
   tNode *Pop();
 
  private:
@@ -57,9 +59,9 @@ class queue {
   tNode **elem;
 };
 
-queue::queue() { cout << "Succeed!" << endl; }
+queue_tree::queue_tree() { cout << "Succeed!" << endl; }
 
-void queue::Init(ch *char_count, int count) {
+void queue_tree::Init(ch *char_count, int count) {
   elem = new tNode *[listsize];
   front = 0;
   rear = count - 1;
@@ -74,7 +76,7 @@ void queue::Init(ch *char_count, int count) {
   }
 }
 
-void queue::Insert(tNode *Node) {
+void queue_tree::Insert(tNode *Node) {
   int lab = 0;
   for (int i = front; i <= rear; i++) {
     if (elem[i]->weight <= Node->weight)
@@ -92,18 +94,18 @@ void queue::Insert(tNode *Node) {
     size += 1;
     elem[rear] = Node;
   }
-  // this->queue_print();
+  // this->queue_tree_print();
 }
 
-tNode *queue::Pop() {
+tNode *queue_tree::Pop() {
   front += 1;
   size -= 1;
   return (elem[front - 1]);
 }
 
-int queue::getsize() { return size; }
+int queue_tree::getsize() { return size; }
 
-void queue::queue_print() {
+void queue_tree::queue_tree_print() {
   cout << front << ' ' << rear << ' ' << size << endl;
   for (int i = front; i <= rear; i++) {
     cout << elem[i]->ch << ' ' << elem[i]->weight << endl;
@@ -122,9 +124,9 @@ class Huffman {
 
   //接口函数
 
-  void BulidTree(queue);  //构建Huffman树
-  void BuildList();       //构建编码表
-  void DisList();         //输出编码表
+  void BulidTree(queue_tree);  //构建Huffman树
+  void BuildList();            //构建编码表
+  void DisList();              //输出编码表
   void PrintTree();
   bool IsLeaf(tNode *);       //判断是否为叶子结点
   string Compress(string);    //文件压缩
@@ -132,16 +134,19 @@ class Huffman {
 
  private:
   void BuildList(tNode *, string);
+  void PrintTree(tNode *);
   string *List;  //编码表；
   tNode *Root;   //根节点
+  int Node_num;
 };
 
 Huffman::Huffman() {
   List = new string[128];
+  Node_num = 0;
   cout << "Huffman Succeed!" << endl;
 }
 
-void Huffman::BulidTree(queue Q) {
+void Huffman::BulidTree(queue_tree Q) {
   tNode *x, *y, *Parent;
   while (Q.getsize() > 1) {
     x = Q.Pop();
@@ -153,9 +158,11 @@ void Huffman::BulidTree(queue Q) {
     Parent->weight = x->weight + y->weight;
     Q.Insert(Parent);
     Q.getsize();
+    Node_num++;
   }
   Root = new tNode();
   Root = Q.Pop();
+  Node_num++;
 }
 
 void Huffman::BuildList() {
@@ -211,7 +218,48 @@ bool Huffman::IsLeaf(tNode *Node) {
     return false;
 }
 
-void Huffman::PrintTree() {}
+void Huffman::PrintTree() {
+  if (Root != NULL) PrintTree(Root);
+}
+
+void Huffman::PrintTree(tNode *Root) {
+  queue<tNode *> Q;
+  Q.push(Root->Left);
+  Q.push(Root->Right);
+  int i = 0, layer_num = 2, j = 0, next_layer_num = 0;
+  cout << setw(4) << setfill(' ') << (int)(Root->ch) << endl;
+  int lab = 1;
+  while (lab) {
+    lab = 0;
+    for (j = 0; j < layer_num; j++) {
+      if ((Q.front()) != NULL) {
+        cout << setw(2) << setfill(' ') << (Q.front()->ch);
+        // cout << setw(4) << setfill(' ') << j;
+        Q.push(NULL);
+        Q.push(Q.front()->Left);
+        Q.push(Q.front()->Right);
+
+        next_layer_num += 2;
+        if (((Q.front()->Left) != NULL) || ((Q.front()->Right) != NULL))
+          lab = 1;
+        Q.pop();
+      } else {
+        cout << setw(2) << setfill(' ') << ' ';
+        // cout << 1 << endl;
+        Q.push(NULL);
+        Q.push(NULL);
+        Q.pop();
+        next_layer_num += 2;
+      }
+      // cout << Q.size() << endl;
+    }
+    // cout << 1 << endl;
+    cout << endl;
+    // cout << next_layer_num << endl;
+    layer_num = next_layer_num;
+    next_layer_num = 0;
+  }
+}
 
 #pragma endregion
 
@@ -229,17 +277,18 @@ int main() {
   read(char_count, count, txt);  //读取stdio.h
   sort(char_count, count);       //对字符进行排序
 
-  queue Q;
+  queue_tree Q;
   Q.Init(char_count, count);
-  Q.queue_print();
+  // Q.queue_tree_print();
 
   Huffman H;
   string Comp, Deco;
   H.BulidTree(Q);
   H.BuildList();
-  H.DisList();
+  // H.DisList();
   Comp = H.Compress(txt);
   Deco = H.Decompress(Comp);
+  H.PrintTree();
 
   print(Deco);
 
