@@ -3,8 +3,8 @@
 #include <string>
 using namespace std;
 int main() {
-  string a = "01234";
-  string b = "01234567";
-  long n = stoi(a);
-  cout << setw(8) << setfill('0') << n << endl;
+  bool a, b;
+  a = true;
+  b = false;
+  (a && b) ? cout << 1 : cout << 0;
 }

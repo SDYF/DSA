@@ -1,4 +1,4 @@
-#pragma GCC optimize(2)
+#pragma GCC optimize(3)
 #include <time.h>
 #include <windows.h>
 
@@ -28,18 +28,28 @@ int main() {
   ofstream out;
   out.open("cost.txt", ios::out);
 
-  string s, number, call_type, time;
-  long i = 0, index, j = 0;
+  string number, call_type, time;
+  long i = 0, index, j = 0, k = 0;
   long *a;
   a = new long[300000];  //记录已被统计过的号码
   Fee *fee, *p;
+  string *s;
+  s = new string[1000000];
+
   fee = new Fee[1000000];
 
   while (!fs.eof()) {
-    fs >> s;
-    number.assign(s, 0, 11);
-    call_type.assign(s, 11, 2);
-    time.assign(s, 13, 4);
+    fs >> s[i];
+    i++;
+    fs.get();
+    if (fs.peek() == EOF) break;
+  }
+
+  i = 0;
+  for (k = 0; k < 1000000; k++) {
+    number.assign(s[k], 0, 11);
+    call_type.assign(s[k], 11, 2);
+    time.assign(s[k], 13, 4);
 
     index = Hash_index(number);
     p = &fee[index];
@@ -65,9 +75,6 @@ int main() {
       a[i] = index;
       i++;
     }
-
-    fs.get();
-    if (fs.peek() == EOF) break;
   }
 
   //输出号码和话费

@@ -227,15 +227,16 @@ void Huffman::PrintTree(tNode *Root) {
   Q.push(Root->Left);
   Q.push(Root->Right);
   int i = 0, layer_num = 2, j = 0, next_layer_num = 0;
-  cout << setw(4) << setfill(' ') << (int)(Root->ch) << endl;
+  cout << setw(2) << setfill(' ') << (int)(Root->ch) << endl;
   int lab = 1;
   while (lab) {
     lab = 0;
+    // cout << layer_num << endl;
     for (j = 0; j < layer_num; j++) {
       if ((Q.front()) != NULL) {
         cout << setw(2) << setfill(' ') << (Q.front()->ch);
         // cout << setw(4) << setfill(' ') << j;
-        Q.push(NULL);
+        //  Q.push(NULL);
         Q.push(Q.front()->Left);
         Q.push(Q.front()->Right);
 
@@ -244,7 +245,7 @@ void Huffman::PrintTree(tNode *Root) {
           lab = 1;
         Q.pop();
       } else {
-        cout << setw(2) << setfill(' ') << ' ';
+        // cout << setw(2) << setfill(' ') << '0';
         // cout << 1 << endl;
         Q.push(NULL);
         Q.push(NULL);
@@ -285,10 +286,13 @@ int main() {
   string Comp, Deco;
   H.BulidTree(Q);
   H.BuildList();
-  // H.DisList();
+  H.DisList();
   Comp = H.Compress(txt);
+  // cout << txt.length() << endl;
+  // cout << Comp.length() / 8 << endl;
+  cout << Comp << endl;
   Deco = H.Decompress(Comp);
-  H.PrintTree();
+  // H.PrintTree();
 
   print(Deco);
 
@@ -301,7 +305,7 @@ int main() {
 void read(ch *&char_count, int &count, string &txt) {
   //文件读取
   ifstream in;
-  in.open("stdio.h", ios::in);
+  in.open("1.txt", ios::in);
 
   long a[128];
   char c;
