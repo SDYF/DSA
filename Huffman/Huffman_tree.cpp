@@ -120,7 +120,6 @@ void queue_tree::queue_tree_print() {
 class Huffman {
  public:
   Huffman();
-  //~Huffman();
 
   //接口函数
 
