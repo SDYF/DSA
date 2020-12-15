@@ -17,7 +17,7 @@ int main() {
   clock_t startTime, endTime;
   ifstream fs;
   startTime = clock();  //计算程序运行时间
-  fs.open("records.txt", ios::in);
+  fs.open("record.txt", ios::in);
   ofstream out;
   out.open("cost.txt", ios::out);
 
@@ -50,16 +50,18 @@ int main() {
 
   //输出号码和话费
   for (j = 0; j < i; j++) {
-    out << "139" << a[j];
+    out << "139";
+    out << setw(8) << setfill('0') << a[j] << ' ';
     out << setw(8) << setfill('0') << fee[a[j]] << endl;
   }
 
   endTime = clock();
-  cout << "The run time is " << (double)(endTime - startTime) / CLOCKS_PER_SEC
-       << 's' << endl;  //输出运行时间
+  std::cout << "The run time is "
+            << (double)(endTime - startTime) / CLOCKS_PER_SEC << 's'
+            << endl;  //输出运行时间
   fs.close();
   out.close();
-  cin.ignore();
+  std::cin.ignore();
   delete[] fee;
   delete[] a;
   return 0;

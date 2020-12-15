@@ -3,6 +3,7 @@
         "xstring": "cpp",
         "deque": "cpp",
         "system_error": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "ostream": "cpp"
     }
 }

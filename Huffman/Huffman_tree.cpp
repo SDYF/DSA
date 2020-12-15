@@ -125,7 +125,7 @@ class Huffman {
 
   void BulidTree(queue_tree);  //构建Huffman树
   void BuildList();            //构建编码表
-  void DisList();              //输出编码表
+  void PrintList();            //输出编码表
   void PrintTree();
   bool IsLeaf(tNode *);       //判断是否为叶子结点
   string Compress(string);    //文件压缩
@@ -204,9 +204,17 @@ string Huffman::Decompress(string txt) {
   return Deco;
 }
 
-void Huffman::DisList() {
+void Huffman::PrintList() {
   for (int i = 0; i < 128; i++)
-    if (List[i] != "") cout << (char)i << ' ' << List[i] << endl;
+    if (List[i] != "")
+      if ((char)(i) == '\n')
+        cout << "\\n" << ' ' << List[i] << endl;
+      else if ((char)(i) == '\t')
+        cout << "\\t" << ' ' << List[i] << endl;
+      else if ((char)(i) == ' ')
+        cout << "space" << ' ' << List[i] << endl;
+      else
+        cout << (char)i << ' ' << List[i] << endl;
   cout << endl;
 }
 
@@ -233,7 +241,14 @@ void Huffman::PrintTree(tNode *Root) {
     // cout << layer_num << endl;
     for (j = 0; j < layer_num; j++) {
       if ((Q.front()) != NULL) {
-        cout << setw(2) << setfill(' ') << (Q.front()->ch);
+        if (Q.front()->ch == '\n')
+          cout << ' ' << "\\n" << ' ';
+        else if (Q.front()->ch == '\t')
+          cout << ' ' << "\\t" << ' ';
+        else if (Q.front()->ch == ' ')
+          cout << ' ' << "space" << ' ';
+        else
+          cout << setw(2) << setfill(' ') << (Q.front()->ch);
         // cout << setw(4) << setfill(' ') << j;
         //  Q.push(NULL);
         Q.push(Q.front()->Left);
@@ -267,6 +282,7 @@ void Huffman::PrintTree(tNode *Root) {
 void read(ch *&, int &, string &);
 void sort(ch *&, int);
 void print(string);
+void print_(string);
 
 /*主函数*/
 int main() {
@@ -285,14 +301,15 @@ int main() {
   string Comp, Deco;
   H.BulidTree(Q);
   H.BuildList();
-  H.DisList();
+  H.PrintList();
   Comp = H.Compress(txt);
   // cout << txt.length() << endl;
   // cout << Comp.length() / 8 << endl;
-  cout << Comp << endl;
+  // cout << Comp << endl;
   Deco = H.Decompress(Comp);
-  // H.PrintTree();
+  H.PrintTree();
 
+  print_(Comp);
   print(Deco);
 
   // cout << count;
@@ -304,7 +321,7 @@ int main() {
 void read(ch *&char_count, int &count, string &txt) {
   //文件读取
   ifstream in;
-  in.open("1.txt", ios::in);
+  in.open("stdio.txt", ios::in);
 
   long a[128];
   char c;
@@ -343,4 +360,12 @@ void print(string txt) {
   ofstream out;
   out.open("stdio1.txt", ios::out);
   out << txt;
+  out.close();
+}
+
+void print_(string txt) {
+  ofstream out;
+  out.open("Comp.txt", ios::out);
+  out << txt;
+  out.close();
 }

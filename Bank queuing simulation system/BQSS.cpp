@@ -58,10 +58,12 @@ int main() {
   }*/
 
   //窗口初始化
-  int num = 0, hour = 9, minute = -1;
+  int num = 0, hour = 9, minute = -1, is_print;
   cout << "请输入窗口个数\n";
   cin >> num;
   window *win;
+  cout << "是否输出窗口信息（1 输出/0 不输出）" << endl;
+  cin >> is_print;
 
   win = new window[num];
   Window_init(win, num);
@@ -74,7 +76,7 @@ int main() {
   queue<int> VQ, NQ;  // VIP队列与普通队列
 
   for (time = 0; time <= TIME; time++) {
-    Time_update(hour, minute);
+    if (is_print) Time_update(hour, minute);
 
     //入队
     for (; cur_cust < n; cur_cust++) {
@@ -112,19 +114,21 @@ int main() {
 
     total_busy_win += busy_win;
     busy_rate = (double)busy_win / num;
-    cout << "Busy Window Rate:";
-    printf("%.2lf", busy_rate * 100);
-    cout << '%' << endl;
+    if (is_print) {
+      cout << "Busy Window Rate:";
+      printf("%.2lf", busy_rate * 100);
+      cout << '%' << endl;
+    }
 
     //顾客等待及容忍时间
     Wait_tolerance(VQ, cust, V_wait_time, leave_cust);
     Wait_tolerance(NQ, cust, N_wait_time, leave_cust);
 
     //输出窗口状态
-    Print_win(win, cust, VQ, NQ, num);
+    if (is_print) Print_win(win, cust, VQ, NQ, num);
 
     // Sleep(500);
-    system("cls");
+    if (is_print) system("cls");
   }
   //银行营业结束,计算时间
   cout << "Bank Close Now!" << endl;

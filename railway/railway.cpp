@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#define Infinity 100000
+#define Infinity 1000000
 
 using namespace std;
 
@@ -21,12 +21,13 @@ class Graph {
   //~Graph();
   void Print_arces();
   void Dijkstra(int, int, City *);
+  void city_delete();
 
  private:
-  int vexnum, arcnum;  //é¡¶ç‚¹æ•°å’Œè¾¹æ•°
-  int *vexs;           //é¡¶ç‚¹æ•°ç»„
-  int **arces;         //é‚»æ¥çŸ©é˜µ
-  // City *city;          //åŸå¸‚ä¿¡æ¯
+  int vexnum, arcnum;  //¶¥µãÊıºÍ±ßÊı
+  int *vexs;           //¶¥µãÊı×é
+  int **arces;         //ÁÚ½Ó¾ØÕó
+  // City *city;          //³ÇÊĞĞÅÏ¢
 };
 
 Graph::Graph(int vex_num) {
@@ -63,6 +64,26 @@ void Graph::Print_arces() {
   }
 }
 
+void Graph::city_delete() {
+  int num, i, j;
+  string n;
+
+  while (true) {
+    cout << "ÇëÊäÈëÒªÉ¾³ıµÄ³ÇÊĞ£¬ÊäÈë#½áÊø" << endl;
+    cin >> n;
+    if (n == "#") break;
+    num = stoi(n);
+    if (num < 0 || num > 25) {
+      cout << "ÇëÖØĞÂÊäÈë" << endl;
+      continue;
+    }
+
+    for (i = 0; i < vexnum; i++) {
+      arces[num][i] = Infinity;
+    }
+  }
+}
+
 void Graph::Dijkstra(int begin, int end, City *city) {
   int *S, *D, **P, i, j, min, k, w;
   S = new int[vexnum];
@@ -77,7 +98,7 @@ void Graph::Dijkstra(int begin, int end, City *city) {
       P[i][1] = i;
       P[i][2] = -1;
     }
-  }  //åˆå§‹åŒ– S,D,P
+  }  //³õÊ¼»¯ S,D,P
 
   S[begin] = 1;
   D[begin] = 0;
@@ -110,15 +131,18 @@ void Graph::Dijkstra(int begin, int end, City *city) {
 #pragma endregion
 
 void city_in(City *&, int &);
+void city_delete(City *&);
 
 int main() {
-  int num_city = 0;  //åŸå¸‚ä¸ªæ•°
-  City *city;        //åŸå¸‚ç¼–å·åŠåç§°
+  int num_city = 0;  //³ÇÊĞ¸öÊı
+  City *city;        //³ÇÊĞ±àºÅ¼°Ãû³Æ
   city = new City[50];
-  city_in(city, num_city);  //è¯»å–åŸå¸‚ä¿¡æ¯
+  city_in(city, num_city);  //¶ÁÈ¡³ÇÊĞĞÅÏ¢
 
+  // cout << num_city << endl;
   Graph G(num_city);
-  G.Print_arces();
+  G.city_delete();
+  //  G.Print_arces();
 
   int begin[3] = {2, 6, 13}, end[3] = {9, 15, 12};
   for (int i = 0; i < 3; i++) G.Dijkstra(begin[i], end[i], city);
